@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  php-site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./source-code:/var/www/html
+    ports:
+      - "8099:8080"

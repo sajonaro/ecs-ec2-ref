@@ -1,0 +1,27 @@
+version: '3.9'
+
+networks:
+  eks-net:
+    driver: bridge
+
+volumes:
+    tfdata_vol:
+      driver: local 
+
+services:
+
+  tf:
+    # image tag isused to bind to a specific version of terraform
+    image: hashicorp/terraform:1.8.0
+    container_name: terraform
+    networks:
+      - eks-net
+    volumes:
+      - tfdata_vol:/tfdata
+      - ./infrastructure:/infrastructure
+    working_dir: /infrastructure
+    environment:
+      - TF_DATA_DIR=/tfdata
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
