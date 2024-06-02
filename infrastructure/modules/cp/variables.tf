@@ -12,7 +12,7 @@ variable "vpc_id" {
 variable "instance_type" {
   type = string
   description = "value of the instance type"
-  default = "t2.micro"
+  default = "t3.nano"
 }
 
 variable "ecs_cluster_name" {

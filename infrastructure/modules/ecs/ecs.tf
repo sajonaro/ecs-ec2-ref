@@ -2,10 +2,12 @@ resource "aws_ecs_cluster" "app_cluster" {
   name = var.app_cluster_name
 }
 
-resource "aws_default_vpc" "default_vpc" {}
+resource "aws_default_vpc" "default_vpc" {
+}
 
 resource "aws_default_subnet" "default_subnet_a" {
   availability_zone = var.availability_zones[0]
+  
 }
 
 resource "aws_default_subnet" "default_subnet_b" {
@@ -131,7 +133,7 @@ resource "aws_ecs_service" "app_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = aws_ecs_task_definition.app_task.family
+    container_name   = "app_task"
     container_port   = var.container_port
   }
 

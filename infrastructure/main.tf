@@ -1,7 +1,8 @@
 terraform {
   required_version = "~> 1.3"
 
-  /*
+
+/* 
  backend "s3" {
     bucket         = "hwa-tf-state"
     key            = "tf-infra/terraform.tfstate"
@@ -48,6 +49,7 @@ module "ecsCluster" {
   service_name                   = local.service_name
   storage_name                   = local.efs_volume_name
   container_path                 = local.container_path
+  region                         = local.region
 }
 
 #provide infrastrcture (ec2 instances) for cluster to run on
