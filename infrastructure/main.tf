@@ -2,7 +2,7 @@ terraform {
   required_version = "~> 1.3"
 
 
-/* 
+  /* 
  backend "s3" {
     bucket         = "hwa-tf-state"
     key            = "tf-infra/terraform.tfstate"
@@ -39,12 +39,12 @@ module "ecsCluster" {
   app_cluster_name   = local.app_cluster_name
   availability_zones = local.availability_zones
 
-  task_famliy                  = local.task_famliy
-  ecr_repo_url                 = local.repository_url
-  container_port               = local.container_port
-  host_port                    = local.container_port
-  task_name                    = local.task_name
-  ecs_task_execution_role_name = local.ecs_task_execution_role_name
+  task_famliy                    = local.task_famliy
+  ecr_repo_url                   = local.repository_url
+  container_port                 = local.container_port
+  host_port                      = local.container_port
+  task_name                      = local.task_name
+  ecs_task_execution_role_name   = local.ecs_task_execution_role_name
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name
   service_name                   = local.service_name

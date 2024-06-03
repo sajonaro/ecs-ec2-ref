@@ -1,10 +1,12 @@
 [{
     "name" :  "${task_name}",
     "image" : "${ecr_repo_url}",
-    "network_mode" : "awsvpc",
     "essential" : true,
     "memory" : 128,
     "cpu" : 1,
+    "healthcheck": {
+        "command": ["CMD-SHELL", "curl --silent --fail http://127.0.0.1:8080/fpm-ping || exit 1"]
+    },
     "portMappings" : [
         {
             "containerPort" : 8080, 

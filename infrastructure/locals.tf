@@ -22,8 +22,8 @@ locals {
   autoscaling_desired_capacity = 2
 
   efs_volume_name = "hello-world-app-efs"
-  container_path = "/var/www/html"
+  container_path  = "/var/www/html"
 
-  repository_url= "628654266155.dkr.ecr.us-east-1.amazonaws.com/hello-world-app:942ea954b1433d0d1b9a411a"
-  region = "eu-central-1"
+  repository_url = "628654266155.dkr.ecr.us-east-1.amazonaws.com/hello-world-app:942ea954b1433d0d1b9a411a"
+  region         = "eu-central-1"
 }

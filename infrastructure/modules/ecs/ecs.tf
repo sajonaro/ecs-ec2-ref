@@ -50,15 +50,16 @@ resource aws_efs_access_point test {
 }
 
 resource "aws_ecs_task_definition" "app_task" {
-  family                   = "${var.task_name}"
-  container_definitions    = templatefile("${path.module}/task-definition.json", {
+  family                  = "${var.task_name}"
+  container_definitions   = templatefile("${path.module}/task-definition.json", {
     task_name             = var.task_name
     ecr_repo_url          = var.ecr_repo_url
     container_path        = var.container_path
     storage_name          = var.storage_name
   })
+  network_mode            = "awsvpc"
+  execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
   
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   volume {
     name = var.storage_name
     efs_volume_configuration {
@@ -140,7 +141,7 @@ resource "aws_ecs_service" "app_service" {
 
   network_configuration {
     subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
-    assign_public_ip = true
+    assign_public_ip = false
     security_groups  = ["${aws_security_group.service_security_group.id}"]
   }
 
