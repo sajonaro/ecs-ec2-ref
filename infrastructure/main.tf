@@ -33,6 +33,7 @@ module "ecrRepo" {
 }*/
 
 #define cluster (service, task)
+
 module "ecsCluster" {
   source = "./modules/ecs"
 

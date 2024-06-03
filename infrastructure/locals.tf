@@ -24,6 +24,6 @@ locals {
   efs_volume_name = "hello-world-app-efs"
   container_path  = "/var/www/html"
 
-  repository_url = "628654266155.dkr.ecr.us-east-1.amazonaws.com/hello-world-app:942ea954b1433d0d1b9a411a"
+  repository_url = "730335574019.dkr.ecr.eu-central-1.amazonaws.com/hello-world-app:59becf6a219f428e4e92b3b8"
   region         = "eu-central-1"
 }

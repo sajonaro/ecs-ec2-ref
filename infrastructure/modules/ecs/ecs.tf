@@ -32,20 +32,19 @@ resource aws_efs_file_system fs {
 
 }
 
-resource aws_efs_access_point test {
+resource "aws_efs_mount_target" "mount-az-1" {
   file_system_id = aws_efs_file_system.fs.id
-  posix_user {
-    gid = 1000
-    uid = 1000
-  }
-  root_directory {
-    path = "/opt/data"
-    creation_info {
-      owner_gid = 1000
-      owner_uid = 1000
-      permissions = "755"
-    }
-  }
+  subnet_id      =  aws_default_subnet.default_subnet_a.id
+}
+
+resource "aws_efs_mount_target" "mount-az-2" {
+  file_system_id = aws_efs_file_system.fs.id
+  subnet_id      =  aws_default_subnet.default_subnet_b.id
+}
+
+resource "aws_efs_mount_target" "mount-az-3" {
+  file_system_id = aws_efs_file_system.fs.id
+  subnet_id      =  aws_default_subnet.default_subnet_c.id
   
 }
 
@@ -64,7 +63,6 @@ resource "aws_ecs_task_definition" "app_task" {
     name = var.storage_name
     efs_volume_configuration {
         file_system_id          = aws_efs_file_system.fs.id
-        root_directory          = "/opt/data"
         transit_encryption      = "ENABLED"
         transit_encryption_port = 2999
       }
