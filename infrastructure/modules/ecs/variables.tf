@@ -42,7 +42,6 @@ variable "container_port" {
 variable "host_port" {
   description = "Host Port"
   type        = number
-  default     = 8080
   
 }
 

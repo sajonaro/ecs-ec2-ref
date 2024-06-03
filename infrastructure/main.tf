@@ -42,6 +42,7 @@ module "ecsCluster" {
   task_famliy                  = local.task_famliy
   ecr_repo_url                 = local.repository_url
   container_port               = local.container_port
+  host_port                    = local.container_port
   task_name                    = local.task_name
   ecs_task_execution_role_name = local.ecs_task_execution_role_name
   application_load_balancer_name = local.application_load_balancer_name
@@ -50,6 +51,7 @@ module "ecsCluster" {
   storage_name                   = local.efs_volume_name
   container_path                 = local.container_path
   region                         = local.region
+
 }
 
 #provide infrastrcture (ec2 instances) for cluster to run on
