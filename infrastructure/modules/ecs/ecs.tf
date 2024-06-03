@@ -50,7 +50,7 @@ resource aws_efs_access_point test {
 }
 
 resource "aws_ecs_task_definition" "app_task" {
-  family                   = var.task_famliy
+  family                   = "${var.task_name}"
   container_definitions    = templatefile("${path.module}/task-definition.json", {
     task_name             = var.task_name
     ecr_repo_url          = var.ecr_repo_url
@@ -116,7 +116,8 @@ resource "aws_lb_target_group" "target_group" {
 
 resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_alb.application_load_balancer.arn
-  port              = "80"
+  #container port is set to 8080 in task definition
+  port              = "8080"
   protocol          = "HTTP"
   default_action {
     type             = "forward"
@@ -133,7 +134,7 @@ resource "aws_ecs_service" "app_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = "app_task"
+    container_name   = "${var.task_name}"
     container_port   = var.container_port
   }
 
@@ -142,6 +143,12 @@ resource "aws_ecs_service" "app_service" {
     assign_public_ip = true
     security_groups  = ["${aws_security_group.service_security_group.id}"]
   }
+
+  ordered_placement_strategy {
+    type  = "spread"
+    field = "attribute:ecs.availability-zone"
+  }
+
 }
 
 resource "aws_security_group" "service_security_group" {
