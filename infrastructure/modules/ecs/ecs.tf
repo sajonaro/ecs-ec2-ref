@@ -58,15 +58,8 @@ resource "aws_ecs_task_definition" "app_task" {
   })
   network_mode            = "awsvpc"
   execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
-  
-  volume {
-    name = var.storage_name
-    efs_volume_configuration {
-        file_system_id          = aws_efs_file_system.fs.id
-        transit_encryption      = "ENABLED"
-        transit_encryption_port = 2999
-      }
-    }
+ 
+
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {

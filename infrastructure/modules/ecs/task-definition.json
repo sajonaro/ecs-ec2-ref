@@ -5,17 +5,12 @@
     "memory" : 128,
     "cpu" : 1,
     "healthcheck": {
-        "command": ["CMD-SHELL", "curl --silent --fail http://127.0.0.1:8080/fpm-ping || exit 1"]
+        "command": ["CMD-SHELL", "curl --silent --fail http://127.0.0.1:8080 || exit 1"]
     },
     "portMappings" : [
         {
             "containerPort" : 8080, 
             "hostPort" : 8080
-     }],
-    "mountPoints" :  [ 
-        { 
-            "containerPath" : "${container_path}", 
-            "sourceVolume" : "${storage_name}"
-        }] 
+     }]
   }]
 
