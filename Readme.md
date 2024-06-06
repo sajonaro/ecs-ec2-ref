@@ -17,6 +17,8 @@ Provided code:
 ## How to build & run?
 
 - provide .env file with valid AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION values
+
+- provide terraform.tfvars file with : IMAGE_URL,S3_ACCESS_KEY_ID,S3_ACCESS_KEY_ID,S3_BUCKET_NAME (see description in vars.tf file)
     
 - build application's image & push it to ECR:
     
@@ -32,7 +34,8 @@ Provided code:
     docker compose run --rm tf apply  --auto-approve 
 
     ```
-- to be able to ssh into EC2 instances, tf-keys key pair (both private and public)  must be regenerated e.g.:
+- to be able to ssh into EC2 instances, tf-keys key pair (both private and public)  must be regenerated, tf-key.pub should be replaced in variable public_ec2_key, e.g. via ssh-keygen :
     ```
     ssh-keygen
     ```     
+

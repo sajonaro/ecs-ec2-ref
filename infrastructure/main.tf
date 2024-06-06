@@ -41,7 +41,7 @@ module "ecsCluster" {
   availability_zones = local.availability_zones
 
   task_famliy                    = local.task_famliy
-  ecr_repo_url                   = local.repository_url
+  ecr_repo_url                   = var.IMAGE_URL
   container_port                 = local.container_port
   host_port                      = local.container_port
   task_name                      = local.task_name
@@ -64,4 +64,8 @@ module "capacity-privider" {
   ecs_cluster_name     = local.app_cluster_name
   min_num_of_instances = 1
   max_num_of_instances = 2
+  S3_ACCESS_KEY_ID     = var.S3_ACCESS_KEY_ID
+  S3_SECRET_ACCESS_KEY = var.S3_SECRET_ACCESS_KEY
+  S3_BUCKET_NAME       = var.S3_BUCKET_NAME
+  public_ec2_key       = local.public_ec2_key
 }

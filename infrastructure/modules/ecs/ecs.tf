@@ -53,9 +53,14 @@ resource "aws_ecs_task_definition" "app_task" {
   container_definitions   = templatefile("${path.module}/task-definition.json", {
     task_name             = var.task_name
     ecr_repo_url          = var.ecr_repo_url
-    container_path        = var.container_path
-    storage_name          = var.storage_name
+    container_path        = "/s3-mount"
+    storage_name          = "service-storage"
   })
+  volume {
+    name = "service-storage"
+    host_path = "/s3-mount"
+  }
+
   network_mode            = "awsvpc"
   execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
  
