@@ -2,7 +2,7 @@
     "name" :  "${task_name}",
     "image" : "${ecr_repo_url}",
     "essential" : true,
-    "memory" : 128,
+    "memory" : 256,
     "cpu" : 1,
     "healthcheck": {
         "command": ["CMD-SHELL", "curl --silent --fail http://127.0.0.1:8080 || exit 1"]

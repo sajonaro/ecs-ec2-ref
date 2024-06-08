@@ -98,7 +98,7 @@ resource "aws_ecs_service" "app_service" {
   cluster         = aws_ecs_cluster.app_cluster.id
   task_definition = aws_ecs_task_definition.app_task.arn
   launch_type     = "EC2"
-  desired_count   = 1
+  desired_count   = var.desired_count
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn

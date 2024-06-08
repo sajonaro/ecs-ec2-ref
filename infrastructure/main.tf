@@ -49,9 +49,9 @@ module "ecsCluster" {
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name
   service_name                   = local.service_name
-  storage_name                   = local.efs_volume_name
   container_path                 = local.container_path
   region                         = local.region
+  desired_count                  = 1
 
 }
 
@@ -63,7 +63,8 @@ module "capacity-provider" {
   instance_type        = local.instance_type
   ecs_cluster_name     = local.app_cluster_name
   min_num_of_instances = 1
-  max_num_of_instances = 2
+  max_num_of_instances = 1
+  app_name             = local.service_name
   S3_ACCESS_KEY_ID     = var.S3_ACCESS_KEY_ID
   S3_SECRET_ACCESS_KEY = var.S3_SECRET_ACCESS_KEY
   S3_BUCKET_NAME       = var.S3_BUCKET_NAME

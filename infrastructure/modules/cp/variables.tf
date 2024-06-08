@@ -1,6 +1,5 @@
 variable "app_name" {
     type = string
-    default = "demo"
   
 }
 
@@ -30,7 +29,6 @@ variable "min_num_of_instances" {
 variable "max_num_of_instances" {
   type = number
   description = "maximum number of EC2 instances in autoscaling group"
-  default = 1
 }
 
 variable "subnet_ids" {

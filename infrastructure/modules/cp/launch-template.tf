@@ -16,13 +16,13 @@ resource "aws_launch_template" "ecs_ec2" {
   user_data = base64encode(<<-EOF
       #!/bin/bash
       echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config;
-      sudo apt-get update -y
-      sudo apt-get install awscli -y
-      sudo apt install s3fs -y
-      echo ${var.S3_ACCESS_KEY_ID}:${var.S3_SECRET_ACCESS_KEY} > ~/.passwd-s3fs
-      chmod 600 ~/.passwd-s3fs
+      sudo amazon-linux-extras install epel -y
+      sudo yum install s3fs-fuse -y
+      sudo touch ~/.passwd-s3fs
+      sudo echo ${var.S3_ACCESS_KEY_ID}:${var.S3_SECRET_ACCESS_KEY} >> ~/.passwd-s3fs
+      sudo chmod 600 ~/.passwd-s3fs
       mkdir /s3-mount
-      s3fs ${var.S3_BUCKET_NAME} /s3-mount -o passwd_file=~/.passwd-s3fs
+      sudo s3fs ${var.S3_BUCKET_NAME} /s3-mount -o passwd_file=~/.passwd-s3fs
     EOF
   )
 

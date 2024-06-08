@@ -88,3 +88,9 @@ variable "container_path" {
   description = "path to local folder inside container (mounted to EFS)"
   type = string
 }
+
+variable "desired_count" {
+  description = "desired Number of tasks to run"
+  type        = number
+  
+}

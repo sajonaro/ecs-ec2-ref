@@ -28,4 +28,13 @@ resource "aws_security_group" "ecs_node_sg" {
     security_groups = [var.bastion_host_sg_id]
   }
 
+  #this is temporary for debugging ONLY
+  ingress {
+    description = "Allow all igress traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 }

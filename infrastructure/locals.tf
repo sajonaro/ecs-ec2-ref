@@ -12,16 +12,13 @@ locals {
   target_group_name              = "hello-world-app-alb-tg"
 
   service_name   = "hello-world-app-service"
+
   container_port = 8080
 
   instance_type = "t3.nano"
 
-  public_ec2_key               = file("tf-key.pub")
-  autoscaling_max_size         = 2
-  autoscaling_min_size         = 2
-  autoscaling_desired_capacity = 2
+  public_ec2_key  = file("tf-key.pub")
 
-  efs_volume_name = "hello-world-app-efs"
   container_path  = "/data"
 
   repository_url = "730335574019.dkr.ecr.eu-central-1.amazonaws.com/hello-world-app:894bf5c088377c873deea48a"

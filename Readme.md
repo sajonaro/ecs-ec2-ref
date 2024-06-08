@@ -1,6 +1,6 @@
 ## What? 
 
-GOAL 1 <br> of this PoC is: to explore options of containerized applications to use container volumes to read/write files to/from common share (s3 or AWS EFS).
+GOAL 1 <br> of this PoC is: to explore options of containerized applications to use container volumes to read/write files to/from common share (s3 ).
 This can be useful when we want to scale out a service dealing with files (e.g. a CMS)
 
 GOAL 2 <br> is to provide a working example of ECS with EC2 launch type setup, as it requires a bit more configuration than the launch type FARGATE    
@@ -39,3 +39,22 @@ Provided code:
     ssh-keygen
     ```     
 
+## 101 on using ssh agent and ssh agent forwarding
+
+- make sure to start ssh agent (on your local host)
+```
+eval $(ssh-agent -s) > /dev/null
+```  
+- register your private key in ssh agent:
+```
+ssh-add path_to/your_private_key
+``` 
+- you can now enjoy using ssh forwarding:
+
+    ```
+    ssh -A ec2@bastion_host_ip
+    ```
+    then, from bastion host (N.B. no need to provide -i/upload private key):
+    ```
+    ssh ec2-user@ec2_private_ip
+    ```
