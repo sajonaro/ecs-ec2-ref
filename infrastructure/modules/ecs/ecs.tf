@@ -18,35 +18,6 @@ resource "aws_default_subnet" "default_subnet_c" {
   availability_zone = var.availability_zones[2]
 }
 
-resource aws_efs_file_system fs {
-  creation_token = var.storage_name
-  performance_mode = "generalPurpose"
-  throughput_mode = "bursting"
-  encrypted = true
-  lifecycle_policy {
-    transition_to_ia = "AFTER_30_DAYS"
-  }
-  tags = {
-    Name = var.storage_name
-  }
-
-}
-
-resource "aws_efs_mount_target" "mount-az-1" {
-  file_system_id = aws_efs_file_system.fs.id
-  subnet_id      =  aws_default_subnet.default_subnet_a.id
-}
-
-resource "aws_efs_mount_target" "mount-az-2" {
-  file_system_id = aws_efs_file_system.fs.id
-  subnet_id      =  aws_default_subnet.default_subnet_b.id
-}
-
-resource "aws_efs_mount_target" "mount-az-3" {
-  file_system_id = aws_efs_file_system.fs.id
-  subnet_id      =  aws_default_subnet.default_subnet_c.id
-  
-}
 
 resource "aws_ecs_task_definition" "app_task" {
   family                  = "${var.task_name}"

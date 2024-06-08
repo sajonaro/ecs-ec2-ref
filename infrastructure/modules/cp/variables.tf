@@ -62,3 +62,15 @@ variable "public_ec2_key" {
   description = "value of the public key to attach to EC2 instances"
   
 }
+
+variable "bastion_host_sg_id" {
+  type = string
+  description = "value of the security group ID of the bastion host to connect to EC2 instances from"
+  
+}
+
+variable "alb_sg_id" {
+  type = string
+  description = "value of the security group ID of the ALB to connect to EC2 instances from"
+  
+}

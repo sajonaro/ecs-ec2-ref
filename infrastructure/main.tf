@@ -56,7 +56,7 @@ module "ecsCluster" {
 }
 
 #provide infrastrcture (ec2 instances) for cluster to run on
-module "capacity-privider" {
+module "capacity-provider" {
   source               = "./modules/cp"
   vpc_id               = module.ecsCluster.vpc_id
   subnet_ids           = module.ecsCluster.vpc_az_ids
@@ -68,4 +68,15 @@ module "capacity-privider" {
   S3_SECRET_ACCESS_KEY = var.S3_SECRET_ACCESS_KEY
   S3_BUCKET_NAME       = var.S3_BUCKET_NAME
   public_ec2_key       = local.public_ec2_key
+  alb_sg_id            = module.ecsCluster.alb_sg_id
+  bastion_host_sg_id   = module.bastion-host.bastion_host_sg_id
+}
+
+#define bastion host to be able to ssh into EC2 instances defined via capacity-provider module
+module "bastion-host" {
+  source = "./modules/bastion-host"
+  vpc_id = module.ecsCluster.vpc_id
+  public_ec2_key_id = module.capacity-provider.public_ec2_key_id
+  subnet_id         = module.ecsCluster.public_subnet_id
+  app_name          = local.service_name
 }
