@@ -3,7 +3,7 @@
 GOAL 1 <br> of this PoC is: to explore options of containerized applications to use container volumes to read/write files to/from common share (s3 ).
 This can be useful when we want to scale out a service dealing with files (e.g. a CMS)
 
-GOAL 2 <br> is to provide a working example of ECS with EC2 launch type setup, as it requires a bit more configuration than the launch type FARGATE    
+GOAL 2 <br> is to provide a working example of ECS with EC2 launch type setup, as it requires a bit more configuration than the launch type FARGATE, so to have a working and complete example comes handy     
 
 Provided code:
 - builds a hello world app's docker image and uploads to ECR
