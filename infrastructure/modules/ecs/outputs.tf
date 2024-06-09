@@ -18,3 +18,7 @@ output "alb_sg_id" {
   value = aws_security_group.load_balancer_security_group.id
 }
 
+output "application_url" {
+  description = "value of the URL of the ALB to connect to EC2 instances from"
+  value = aws_alb.application_load_balancer.dns_name
+}

@@ -6,25 +6,39 @@ This can be useful when we want to scale out a service dealing with files (e.g. 
 GOAL 2 <br> is to provide a working example of ECS with EC2 launch type setup, as it requires a bit more configuration than the launch type FARGATE    
 
 Provided code:
-- builds a hello world app's docker image, defines ECS task definition using  either:
-    - docker-s3-volume from (https://github.com/elementar/docker-s3-volume)
-    - EFS mount
-    - other options
-- creates fully working ECS cluster (with EC2 launch type) using  task definition from above
-
+- builds a hello world app's docker image and uploads to ECR
+- defines ECS cluster with launch type EC2:
+   - task definition using application image from step above
+   - capacity provider configuring container instances (aka EC2s ) parameters
+   - docker volume with driver = local (for local file system) bound to container's local directory 
  
+## TL/DR;
+
+We make our application "think" it accesses just a local directory, whereas it is actually bound to an s3 bucket behind the scenes 
+
+Implementation details:
+- given existing bucket (created outside current terraform stack) we provide access to it as follows: create IAM role, assign it to EC2 instances in the cluster,give this role permissions to access s3, and provide resource policy for s3 to allow access by the IAM role. 
+- We use mount-s3 utility (https://aws.amazon.com/about-aws/whats-new/2023/03/mountpoint-amazon-s3/) to mount EC2's local folder to external s3 bucket using user_data.sh initializing script, mount-s3 utility uses policies attached to EC2s IAM role to access specified bucket 
+- In task definition we use volume configuration to bind host's folder (with we mounted in step above) to container's local folder.
+
+
+
 
 ## How to build & run?
 
-- provide .env file with valid AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION values
-
-- provide terraform.tfvars file with : IMAGE_URL,S3_ACCESS_KEY_ID,S3_ACCESS_KEY_ID,S3_BUCKET_NAME (see description in vars.tf file)
-    
+- provide .env file with valid AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION values ( for docker compose to pick it up)
 - build application's image & push it to ECR:
     
     ```           
     ./build_push_to_ecr.sh
-    ```    
+    ```  
+- provide terraform.tfvars file with : IMAGE_URL (update this value based on step above), S3_BUCKET_NAME (see description in vars.tf file)
+
+- generate ssh key pair (tf-key), these keys are used to ssh into EC2s via bastion host: tf-key.pub should be replaced in variable public_ec2_key, e.g. use ssh-keygen :
+    ```
+    ssh-keygen
+    ```  
+      
 - use usual terraform commands to deploy ECS stack (albeit via docker compose to avoid cluttering local environment & making sure we use fixed tf version)
    
     ```
@@ -34,12 +48,14 @@ Provided code:
     docker compose run --rm tf apply  --auto-approve 
 
     ```
-- to be able to ssh into EC2 instances, tf-keys key pair (both private and public)  must be regenerated, tf-key.pub should be replaced in variable public_ec2_key, e.g. via ssh-keygen :
-    ```
-    ssh-keygen
-    ```     
+- Finally, access deployed application via browser using ALBs DNS name (use output value from terraform [application_url], or login into AWS console) e.g.:
+```
+http://hello-world-app-alb-1233026957.eu-central-1.elb.amazonaws.com:8080/
+``` 
 
-## 101 on using ssh agent and ssh agent forwarding
+   
+
+## 101 on using ssh agent 
 
 - make sure to start ssh agent (on your local host)
 ```
