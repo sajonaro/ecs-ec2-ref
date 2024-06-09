@@ -24,14 +24,25 @@ resource "aws_ecs_task_definition" "app_task" {
   container_definitions   = templatefile("${path.module}/task-definition.json", {
     task_name             = var.task_name
     ecr_repo_url          = var.ecr_repo_url
+    #container_path could be moved to variable
     container_path        = "/s3-mount"
-    storage_name          = "service-storage"
+    volume_name          = "service-storage"
   })
   volume {
     name = "service-storage"
-    host_path = "/var/s3-mount"
-  }
+    docker_volume_configuration {
+      scope         = "shared"
+      autoprovision = true
+      driver        = "local"
 
+      driver_opts = {
+        "o"      = "bind"
+        "type"   = "none"
+        "device" = "/var/s3-mount"
+      }
+    }
+  }
+      
   network_mode            = "awsvpc"
   execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
  

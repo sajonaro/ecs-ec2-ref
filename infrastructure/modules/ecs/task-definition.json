@@ -12,6 +12,12 @@
         {
             "containerPort" : 8080, 
             "hostPort" : 8080
-     }]
+     }],
+     "mountPoints": [
+        {
+            "sourceVolume": "${volume_name}",
+            "containerPath": "${container_path}",
+            "readOnly": false
+        }]
   }]
 
