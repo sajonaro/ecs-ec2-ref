@@ -21,3 +21,9 @@ variable "IMAGE_URL" {
   description = "value of the image URL to run in ECS task"
   
 }
+
+variable "region" {
+  type = string
+  description = "value of the region to deploy infrastructure to"
+  
+}

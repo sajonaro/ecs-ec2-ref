@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "app_task" {
   })
   volume {
     name = "service-storage"
-    host_path = "/s3-mount"
+    host_path = "/var/s3-mount"
   }
 
   network_mode            = "awsvpc"

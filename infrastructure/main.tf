@@ -65,12 +65,11 @@ module "capacity-provider" {
   min_num_of_instances = 1
   max_num_of_instances = 1
   app_name             = local.service_name
-  S3_ACCESS_KEY_ID     = var.S3_ACCESS_KEY_ID
-  S3_SECRET_ACCESS_KEY = var.S3_SECRET_ACCESS_KEY
   S3_BUCKET_NAME       = var.S3_BUCKET_NAME
   public_ec2_key       = local.public_ec2_key
   alb_sg_id            = module.ecsCluster.alb_sg_id
   bastion_host_sg_id   = module.bastion-host.bastion_host_sg_id
+  region               = var.region
 }
 
 #define bastion host to be able to ssh into EC2 instances defined via capacity-provider module

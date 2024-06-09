@@ -37,17 +37,6 @@ variable "subnet_ids" {
   
 }
 
-variable "S3_ACCESS_KEY_ID" {
-  type = string
-  description = "value of the access key ID of Identity entitled to S3 bucket"
-  
-}
-
-variable "S3_SECRET_ACCESS_KEY" {
-  type = string
-  description = "value of the secret access key of Identity entitled to S3 bucket"
-  
-}
 
 variable "S3_BUCKET_NAME" {
   
@@ -70,5 +59,11 @@ variable "bastion_host_sg_id" {
 variable "alb_sg_id" {
   type = string
   description = "value of the security group ID of the ALB to connect to EC2 instances from"
+  
+}
+
+variable "region" {
+  type = string
+  description = "value of the region"
   
 }
