@@ -9,7 +9,7 @@ volumes:
       driver: local 
 
 services:
-
+  # --- infrastructure definition ---
   tf:
     # image tag isused to bind to a specific version of terraform
     image: hashicorp/terraform:1.8.0
@@ -25,3 +25,21 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+
+  
+  # --- Code Deploy ---
+  tfcd:
+    # image tag isused to bind to a specific version of terraform
+    image: hashicorp/terraform:1.8.0
+    container_name: terraform
+    networks:
+      - eks-net
+    volumes:
+      - tfdata_vol:/tfdata
+      - ./code-deploy:/infrastructure
+    working_dir: /infrastructure
+    environment:
+      - TF_DATA_DIR=/tfdata
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}    

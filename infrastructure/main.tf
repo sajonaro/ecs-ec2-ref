@@ -74,8 +74,8 @@ module "capacity-provider" {
 
 #define bastion host to be able to ssh into EC2 instances defined via capacity-provider module
 module "bastion-host" {
-  source = "./modules/bastion-host"
-  vpc_id = module.ecsCluster.vpc_id
+  source            = "./modules/bastion-host"
+  vpc_id            = module.ecsCluster.vpc_id
   public_ec2_key_id = module.capacity-provider.public_ec2_key_id
   subnet_id         = module.ecsCluster.public_subnet_id
   app_name          = local.service_name

@@ -22,3 +22,9 @@ output "application_url" {
   description = "value of the URL of the ALB to connect to EC2 instances from"
   value = aws_alb.application_load_balancer.dns_name
 }
+
+output "task_definition_arn" {
+  description = "value of the task definition ARN"
+  value = aws_ecs_task_definition.app_task.arn
+  
+}

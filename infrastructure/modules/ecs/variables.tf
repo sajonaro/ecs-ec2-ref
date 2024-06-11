@@ -94,3 +94,8 @@ variable "desired_count" {
   type        = number
   
 }
+
+variable "lb_target_group_name" {
+  type    = string
+  default = "tg"
+}
