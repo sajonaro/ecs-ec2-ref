@@ -35,7 +35,7 @@ resource "aws_alb_listener" "l_8080" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tgs[1].arn
+    target_group_arn = aws_lb_target_group.tgs[0].arn
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_alb_listener" "l_443" {
   certificate_arn   = var.alb_certificate_arn
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tgs[0].arn
+    target_group_arn = aws_lb_target_group.tgs[1].arn
   }
   depends_on = [aws_lb_target_group.tgs]
 

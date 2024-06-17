@@ -23,28 +23,6 @@ variable "task_famliy" {
   type        = string
 }
 
-variable "retention_in_days" {
-  description = "CloudWatch Log Retention In Days"
-  type        = number
-  default     = 7
-}
-
-variable "ecr_repo_url" {
-  description = "ECR Repo URL"
-  type        = string
-}
-
-variable "container_port" {
-  description = "Container Port"
-  type        = number
-}
-
-variable "host_port" {
-  description = "Host Port"
-  type        = number
-  
-}
-
 variable "container_memory" {
   description = "Container Memory"
   type        = number
@@ -59,14 +37,10 @@ variable "container_cpu" {
   
 }
 
-variable "task_name" {
-  description = "ECS Task Name"
-  type        = string
-}
-
-variable "ecs_task_execution_role_name" {
-  description = "ECS Task Execution Role Name"
-  type        = string
+variable "container_port" {
+  description = "Container Port"
+  type        = number
+  
 }
 
 variable "application_load_balancer_name" {
@@ -80,10 +54,7 @@ variable "service_name" {
   type        = string
 }
 
-variable "container_path" {
-  description = "path to local folder inside container (mounted to EFS)"
-  type = string
-}
+
 
 variable "desired_count" {
   description = "desired Number of tasks to run"
@@ -93,6 +64,12 @@ variable "desired_count" {
 
 variable "alb_certificate_arn" {
   description = "ARN of the SSL certificate to use for the ALB"
+  type        = string
+  
+}
+
+variable "task_definition_arn" {
+  description = "ARN of the task definition"
   type        = string
   
 }

@@ -6,12 +6,12 @@ variable "region" {
 
 variable "ecs_cluster_name" {
     description = "value of the ecs cluster name"
-  
+    type = string
 }
 
 variable "ecs_service_name" {
     description = "value of the ecs service name"
-  
+    type = string
 }
 
 variable "target_group_1_name" {

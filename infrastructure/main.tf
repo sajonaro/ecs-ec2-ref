@@ -40,24 +40,51 @@ module "dns-and-certificate-settings" {
   forward_to_zone_id = module.ecs-cluster.alb_zone_id
 }
 
+module "task-execution-role" {
+  source = "./modules/task-execution-role"
+  ecs_task_execution_role_name   = local.ecs_task_execution_role_name
+}
+
+
+module "blue-task-definition" {
+  source = "./modules/task-definition"
+  ecr_repo_url                   = local.repository_url
+  task_name                      = "hw-app-blue"
+  host_port                      = local.host_port
+  aws_region                     = local.region
+  ecs_task_execution_role_arn    = module.task-execution-role.task_execution_role_arn
+  container_path                 = local.container_path
+  ecs_service_name               =  local.service_name
+}
+
+## create new task definition to be used by code deploy (via task arn in appspec.yml)
+module "green-task-definition" {
+  source = "./modules/task-definition"
+  ecr_repo_url                   = local.green_repo_url
+  task_name                      = "hw-app-green"
+   ecs_service_name              =  local.service_name
+  host_port                      = local.host_port
+  aws_region                     = local.region
+  ecs_task_execution_role_arn    = module.task-execution-role.task_execution_role_arn
+  container_path                 = local.container_path
+}
+
 
 #define cluster (service, task)
 module "ecs-cluster" {
   source = "./modules/ecs"
-  app_cluster_name   = local.app_cluster_name
-  availability_zones = local.availability_zones
+  app_cluster_name               = local.app_cluster_name
+  availability_zones             = local.availability_zones
   task_famliy                    = local.task_famliy
-  ecr_repo_url                   = var.IMAGE_URL
   container_port                 = local.container_port
-  host_port                      = local.host_port
-  task_name                      = local.task_name
-  ecs_task_execution_role_name   = local.ecs_task_execution_role_name
+  #start with "blue"(old) instance
+  task_definition_arn            = module.blue-task-definition.task_definition_arn
   application_load_balancer_name = local.application_load_balancer_name
   service_name                   = local.service_name
-  container_path                 = local.container_path
   region                         = local.region
   desired_count                  = 1
   alb_certificate_arn            = module.dns-and-certificate-settings.certificate_arn
+
 }
 
 #provide infrastrcture (ec2 instances) for cluster to run on
@@ -95,5 +122,5 @@ module "glue-green-code-deploy" {
   target_group_1_name = module.ecs-cluster.target_group_1_name
   target_group_2_name = module.ecs-cluster.target_group_2_name
   listener_arn        = module.ecs-cluster.listener_arn
-  app_task_role_arn   = module.ecs-cluster.task_role_arn
+  app_task_role_arn   = module.task-execution-role.task_execution_role_arn
 }

@@ -31,9 +31,25 @@ resource "aws_alb" "application_load_balancer" {
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
+  
+  #create as many rules as there are listeners
   ingress {
-    from_port   = var.container_port
-    to_port     = var.container_port
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -49,14 +65,14 @@ resource "aws_security_group" "load_balancer_security_group" {
 resource "aws_ecs_service" "app_service" {
   name            = var.service_name
   cluster         = aws_ecs_cluster.app_cluster.id
-  task_definition = aws_ecs_task_definition.app_task.arn
+  task_definition = var.task_definition_arn
   launch_type     = "EC2"
   desired_count   = var.desired_count
   force_new_deployment = true
   
   load_balancer {
-    target_group_arn = aws_lb_target_group.tgs[0].arn
-    container_name   = "${var.task_name}" 
+    target_group_arn = aws_lb_target_group.tgs[1].arn
+    container_name   = var.service_name 
     # Application Port
     container_port   = var.container_port 
   }

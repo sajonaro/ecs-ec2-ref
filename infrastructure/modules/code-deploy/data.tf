@@ -2,14 +2,15 @@ data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "assume_by_codedeploy" {
   statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["codedeploy.amazonaws.com"]
+      sid = "AllowCodeDeployAssumeTheRole"
+      effect  = "Allow"
+      actions = ["sts:AssumeRole"]
+      principals {
+        type        = "Service"
+        identifiers = ["codedeploy.amazonaws.com"]
+      }
     }
-  }
+
 }
 
 data "aws_iam_policy_document" "policy" {

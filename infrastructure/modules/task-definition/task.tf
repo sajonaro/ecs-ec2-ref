@@ -1,14 +1,14 @@
 resource "aws_ecs_task_definition" "app_task" {
-  family                  = "${var.task_name}"
+  family                  = var.ecs_service_name
   container_definitions   = templatefile("${path.module}/task-definition.json", {
-    task_name             = var.task_name
+    container_name         = var.ecs_service_name
     ecr_repo_url          = var.ecr_repo_url
     #container_path could be moved to variable
     container_path        = "/s3-mount"
     volume_name           = "service-storage"
     #TODO at the moment this is hardcoded, but it should be a variable
     host_port             = var.host_port
-    region                = var.region
+    region                = var.aws_region
     log_group_name        = aws_cloudwatch_log_group.log_group.name
   })
   volume {
@@ -27,16 +27,15 @@ resource "aws_ecs_task_definition" "app_task" {
   }
       
   network_mode            = "awsvpc"
-  execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
- 
+  execution_role_arn      = var.ecs_task_execution_role_arn
 
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name              = "/ecs/${var.service_name}"
+  name              = "/ecs/${var.task_name}"
   retention_in_days = var.retention_in_days
 
   tags = {
-    Name = var.service_name
+    Name = var.task_name
   }
 }

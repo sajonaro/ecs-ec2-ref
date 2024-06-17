@@ -16,6 +16,7 @@ locals {
   public_ec2_key = file("tf-key.pub")
   container_path = "/data"
   repository_url = "730335574019.dkr.ecr.eu-central-1.amazonaws.com/hello-world-app:894bf5c088377c873deea48a"
+  green_repo_url = "730335574019.dkr.ecr.eu-central-1.amazonaws.com/hello-world-app:67b6609c13b097888df97e97"
   region         = "eu-central-1"
 
 }

@@ -29,12 +29,6 @@ output "alb_zone_id" {
 }
 
 
-output "task_definition_arn" {
-  description = "value of the task definition ARN"
-  value = aws_ecs_task_definition.app_task.arn
-  
-}
-
 output "target_group_1_name" {
   description = "value of the target group name"
   value = aws_lb_target_group.tgs[0].name
@@ -52,10 +46,6 @@ output "listener_arn" {
   value = aws_alb_listener.l_443.arn
 }
 
-output "task_role_arn" {
-  description = "value of the task role arn"
-  value = aws_iam_role.ecs_task_execution_role.arn
-}
 
 output "ecs_service_id" {
   value = aws_ecs_service.app_service.id
