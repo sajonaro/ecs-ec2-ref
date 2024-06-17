@@ -1,11 +1,11 @@
 resource "aws_codedeploy_app" "application" {
   compute_platform = "ECS"
-  name             = "${var.application_name}-deploy"
+  name             = "${var.ecs_service_name}-deploy"
 }
 
-resource "aws_codedeploy_deployment_group" "frontend" {
+resource "aws_codedeploy_deployment_group" "blue_green_deployment_group" {
   app_name               = aws_codedeploy_app.application.name
-  deployment_group_name  = "${var.application_name}-deploy-group"
+  deployment_group_name  = "${var.ecs_service_name}-deploy-group"
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
   service_role_arn       = aws_iam_role.codedeploy.arn
 
@@ -29,7 +29,7 @@ resource "aws_codedeploy_deployment_group" "frontend" {
     deployment_option = "WITH_TRAFFIC_CONTROL"
     deployment_type   = "BLUE_GREEN"
   }
-
+  
   auto_rollback_configuration {
     enabled = true
     events  = ["DEPLOYMENT_FAILURE"]
@@ -38,7 +38,7 @@ resource "aws_codedeploy_deployment_group" "frontend" {
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = [aws_alb_listener.l_443.arn]
+        listener_arns = [var.listener_arn]
       }
 
       target_group {

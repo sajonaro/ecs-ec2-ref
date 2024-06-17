@@ -74,10 +74,6 @@ variable "application_load_balancer_name" {
   type        = string
 }
 
-variable "target_group_name" {
-  description = "ALB Target Group Name"
-  type        = string
-}
 
 variable "service_name" {
   description = "ECS Service Name"
@@ -95,7 +91,8 @@ variable "desired_count" {
   
 }
 
-variable "lb_target_group_name" {
-  type    = string
-  default = "tg"
+variable "alb_certificate_arn" {
+  description = "ARN of the SSL certificate to use for the ALB"
+  type        = string
+  
 }

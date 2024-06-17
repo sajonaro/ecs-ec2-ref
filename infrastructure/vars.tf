@@ -16,3 +16,9 @@ variable "region" {
   description = "value of the region to deploy infrastructure to"
 
 }
+
+variable "dns_name" {
+  type        = string
+  description = "value of the dns name to create in route53"
+  
+}

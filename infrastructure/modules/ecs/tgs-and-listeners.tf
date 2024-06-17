@@ -1,11 +1,11 @@
 
-resource "aws_lb_target_group" "tg" {
+resource "aws_lb_target_group" "tgs" {
   count = length(local.target_groups)
 
   name        = "target-group-${element(local.target_groups, count.index)}"
   port        = 443
   protocol    = "HTTP"
-  target_type = "instance"
+  target_type = "ip"
   vpc_id      = aws_default_vpc.default_vpc.id
   health_check {
     matcher = "200,301,302,404"
@@ -15,7 +15,7 @@ resource "aws_lb_target_group" "tg" {
 }
 
 resource "aws_alb_listener" "l_80" {
-  load_balancer_arn = aws_lb.app_lb.arn
+  load_balancer_arn = aws_alb.application_load_balancer.arn
   port              = "80"
   protocol          = "HTTP"
   default_action {
@@ -29,26 +29,26 @@ resource "aws_alb_listener" "l_80" {
 }
 
 resource "aws_alb_listener" "l_8080" {
-  load_balancer_arn = aws_lb.app_lb.id
-  port              = 8080
+  load_balancer_arn = aws_alb.application_load_balancer.arn
+  port              = "8080"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tg[1].arn
+    target_group_arn = aws_lb_target_group.tgs[1].arn
   }
 }
 
 resource "aws_alb_listener" "l_443" {
-  load_balancer_arn = aws_lb.app_lb.arn
+  load_balancer_arn = aws_alb.application_load_balancer.arn
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   = XXXX
+  certificate_arn   = var.alb_certificate_arn
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tg[0].arn
+    target_group_arn = aws_lb_target_group.tgs[0].arn
   }
-  depends_on = [aws_lb_target_group.tg]
+  depends_on = [aws_lb_target_group.tgs]
 
   lifecycle {
     ignore_changes = [default_action]

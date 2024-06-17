@@ -17,3 +17,4 @@ resource "aws_iam_role_policy_attachment" "ecs_tast_access_efs_policy_attachment
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
 }
 */
+

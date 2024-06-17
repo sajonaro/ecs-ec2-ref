@@ -19,45 +19,6 @@ resource "aws_default_subnet" "default_subnet_c" {
 }
 
 
-resource "aws_ecs_task_definition" "app_task" {
-  family                  = "${var.task_name}"
-  container_definitions   = templatefile("${path.module}/task-definition.json", {
-    task_name             = var.task_name
-    ecr_repo_url          = var.ecr_repo_url
-    #container_path could be moved to variable
-    container_path        = "/s3-mount"
-    volume_name          = "service-storage"
-  })
-  volume {
-    name = "service-storage"
-    docker_volume_configuration {
-      scope         = "shared"
-      autoprovision = true
-      driver        = "local"
-
-      driver_opts = {
-        "o"      = "bind"
-        "type"   = "none"
-        "device" = "/var/s3-mount"
-      }
-    }
-  }
-      
-  network_mode            = "awsvpc"
-  execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
- 
-
-}
-
-resource "aws_cloudwatch_log_group" "log_group" {
-  name              = "/ecs/${var.service_name}"
-  retention_in_days = var.retention_in_days
-
-  tags = {
-    Name = var.service_name
-  }
-}
-
 resource "aws_alb" "application_load_balancer" {
   name               = var.application_load_balancer_name
   load_balancer_type = "application"
@@ -85,36 +46,23 @@ resource "aws_security_group" "load_balancer_security_group" {
   }
 }
 
-resource "aws_lb_target_group" "target_group" {
-  name        = var.target_group_name
-  port        = var.container_port
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = aws_default_vpc.default_vpc.id
-}
-
-resource "aws_lb_listener" "listener" {
-  load_balancer_arn = aws_alb.application_load_balancer.arn
-  #container port is set to 8080 in task definition
-  port              = var.container_port
-  protocol          = "HTTP"
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.arn
-  }
-}
-
 resource "aws_ecs_service" "app_service" {
   name            = var.service_name
   cluster         = aws_ecs_cluster.app_cluster.id
   task_definition = aws_ecs_task_definition.app_task.arn
   launch_type     = "EC2"
   desired_count   = var.desired_count
-
+  force_new_deployment = true
+  
   load_balancer {
-    target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = "${var.task_name}"
-    container_port   = var.container_port
+    target_group_arn = aws_lb_target_group.tgs[0].arn
+    container_name   = "${var.task_name}" 
+    # Application Port
+    container_port   = var.container_port 
+  }
+  
+  deployment_controller {
+    type = "CODE_DEPLOY"
   }
 
   network_configuration {
@@ -123,9 +71,24 @@ resource "aws_ecs_service" "app_service" {
     security_groups  = ["${aws_security_group.service_security_group.id}"]
   }
 
+
+  # Spread tasks evenly accross all Availability Zones for High Availability
   ordered_placement_strategy {
     type  = "spread"
     field = "attribute:ecs.availability-zone"
+  }
+  
+  # Make use of all available space on the Container Instances
+  ordered_placement_strategy {
+    type  = "binpack"
+    field = "memory"
+  }
+
+  # we ignore task_definition changes as the revision changes on deploy
+  # of a new version of the application
+  # desired_count is ignored as it can change due to autoscaling policy
+  lifecycle {
+    ignore_changes = [task_definition, desired_count, load_balancer]
   }
 
 }
@@ -145,3 +108,4 @@ resource "aws_security_group" "service_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
