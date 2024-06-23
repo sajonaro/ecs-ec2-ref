@@ -18,37 +18,6 @@ resource "aws_default_subnet" "default_subnet_c" {
   availability_zone = var.availability_zones[2]
 }
 
-
-resource "aws_ecs_task_definition" "app_task" {
-  family                  = "${var.task_name}"
-  container_definitions   = templatefile("${path.module}/task-definition.json", {
-    task_name             = var.task_name
-    ecr_repo_url          = var.ecr_repo_url
-    #container_path could be moved to variable
-    container_path        = "/s3-mount"
-    volume_name          = "service-storage"
-  })
-  volume {
-    name = "service-storage"
-    docker_volume_configuration {
-      scope         = "shared"
-      autoprovision = true
-      driver        = "local"
-
-      driver_opts = {
-        "o"      = "bind"
-        "type"   = "none"
-        "device" = "/var/s3-mount"
-      }
-    }
-  }
-      
-  network_mode            = "awsvpc"
-  execution_role_arn      = aws_iam_role.ecs_task_execution_role.arn
- 
-
-}
-
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/ecs/${var.service_name}"
   retention_in_days = var.retention_in_days
@@ -112,13 +81,13 @@ resource "aws_lb_listener" "listener_443" {
 resource "aws_ecs_service" "app_service" {
   name            = var.service_name
   cluster         = aws_ecs_cluster.app_cluster.id
-  task_definition = aws_ecs_task_definition.app_task.arn
+  task_definition = var.task_definition_arn
   launch_type     = "EC2"
   desired_count   = var.desired_count
 
   load_balancer {
     target_group_arn = aws_lb_target_group.service_target_group.arn
-    container_name   = "${var.task_name}"
+    container_name   = var.container_name
     container_port   = var.container_port
   }
 

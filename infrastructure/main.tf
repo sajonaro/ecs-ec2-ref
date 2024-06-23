@@ -32,19 +32,16 @@ module "ecrRepo" {
   ecr_repo_name = local.ecr_repo_name
 }*/
 
-#define cluster (service, task)
-
+#define cluster service
 module "ecs-config" {
   source = "./modules/ecs"
 
   app_cluster_name   = local.app_cluster_name
   availability_zones = local.availability_zones
-
   task_famliy                    = local.task_famliy
-  ecr_repo_url                   = var.IMAGE_URL
   container_port                 = local.container_port
   host_port                      = local.container_port
-  task_name                      = local.task_name
+  container_name                 = local.service_name 
   ecs_task_execution_role_name   = local.ecs_task_execution_role_name
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name
@@ -53,7 +50,26 @@ module "ecs-config" {
   region                         = local.region
   desired_count                  = 1
   alb_certificate_arn            = module.dns-and-certificate-settings.certificate_arn
+  task_definition_arn            = module.task-def.task_definition_arn
 }
+
+module "task-execution-role" {
+  source = "./modules/task-execution-role"
+  ecs_task_execution_role_name   = local.ecs_task_execution_role_name
+}
+
+
+module "task-def" {
+  source = "./modules/task-definition"
+  
+  ecr_repo_url                   = var.IMAGE_URL
+  task_definition_name           = local.task_famliy
+  aws_region                     = local.region
+  ecs_task_execution_role_arn    = module.task-execution-role.task_execution_role_arn
+  container_path                 = local.container_path
+  container_name                 = local.service_name 
+}
+
 
 #provide infrastrcture (ec2 instances) for cluster to run on
 module "capacity-provider" {

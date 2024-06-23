@@ -29,11 +29,6 @@ variable "retention_in_days" {
   default     = 7
 }
 
-variable "ecr_repo_url" {
-  description = "ECR Repo URL"
-  type        = string
-}
-
 variable "container_port" {
   description = "Container Port"
   type        = number
@@ -59,8 +54,8 @@ variable "container_cpu" {
   
 }
 
-variable "task_name" {
-  description = "ECS Task Name"
+variable "container_name" {
+  description = "Container Name"
   type        = string
 }
 
@@ -98,4 +93,10 @@ variable "desired_count" {
 variable "alb_certificate_arn" {
   description = "Certificate ARN to attach to ALB"
   type        = string
+}
+
+variable "task_definition_arn" {
+  description = "Task Definition ARN"
+  type        = string  
+  
 }

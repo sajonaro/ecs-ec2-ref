@@ -1,5 +1,5 @@
 [{
-    "name" :  "${task_name}",
+    "name" :  "${name}",
     "image" : "${ecr_repo_url}",
     "essential" : true,
     "memory" : 256,
@@ -18,6 +18,14 @@
             "sourceVolume": "${volume_name}",
             "containerPath": "${container_path}",
             "readOnly": false
-        }]
+        }],
+      "logConfiguration" : {
+            "logDriver" : "awslogs",
+            "options" : {
+              "awslogs-group"         : "${log_group_name}",
+              "awslogs-stream-prefix" : "ecs",
+              "awslogs-region"        : "${region}" 
+            }
+          }   
   }]
 
