@@ -33,8 +33,7 @@ module "glue-green-code-deploy" {
   region              =  local.region
   ecs_cluster_name    =  local.app_cluster_name
   ecs_service_name    =  local.service_name
-  target_group_1_name =  "tg-green"
-  target_group_2_name =  "tg-blue" 
-  listener_arn        =  "arn:aws:elasticloadbalancing:eu-central-1:730335574019:loadbalancer/app/hello-world-app-alb/ba293ebd2bb89175"
-  app_task_role_arn   =  "arn:aws:iam::730335574019:role/hello-world-app-task-execution-role"
+  target_group_1_name =  "tg-green-hello-world-app-service" 
+  target_group_2_name =  "tg-blue-hello-world-app-service"
+  listener_arn        =  "arn:aws:elasticloadbalancing:eu-central-1:730335574019:listener/app/hello-world-app-alb/ec1c45526365dcce/85395f3418034e54"
 }

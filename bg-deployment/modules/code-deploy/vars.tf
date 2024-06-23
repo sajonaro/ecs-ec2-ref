@@ -27,8 +27,3 @@ variable "listener_arn" {
   description = "value of the listener arn"
   
 }
-
-variable "app_task_role_arn" {
-    description = "value of the task role arn"
-  
-}
