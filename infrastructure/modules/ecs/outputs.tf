@@ -34,3 +34,20 @@ output "alb_zone_id" {
   value = aws_alb.application_load_balancer.zone_id
   
 }
+
+output "tg_blue_name" {
+  description = "value of the ARN of the blue target group"
+  value = aws_lb_target_group.service_target_group_blue.name
+  
+}
+
+output "tg_green_name" {
+  description = "value of the ARN of the green target group"
+  value = aws_lb_target_group.service_target_group_green.name
+  
+}
+
+output "listener_arn" {
+  description = "value of the ARN of the ALB listener"
+  value = aws_lb_listener.listener_443.arn
+}

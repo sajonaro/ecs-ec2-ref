@@ -18,10 +18,6 @@ variable "storage_name" {
   default = "service_storage"
 }
 
-variable "task_famliy" {
-  description = "ECS Task Family"
-  type        = string
-}
 
 variable "retention_in_days" {
   description = "CloudWatch Log Retention In Days"

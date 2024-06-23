@@ -38,7 +38,6 @@ module "ecs-config" {
 
   app_cluster_name   = local.app_cluster_name
   availability_zones = local.availability_zones
-  task_famliy                    = local.task_famliy
   container_port                 = local.container_port
   host_port                      = local.container_port
   container_name                 = local.service_name 
@@ -64,6 +63,19 @@ module "task-def" {
   
   ecr_repo_url                   = var.IMAGE_URL
   task_definition_name           = local.task_famliy
+  aws_region                     = local.region
+  ecs_task_execution_role_arn    = module.task-execution-role.task_execution_role_arn
+  container_path                 = local.container_path
+  container_name                 = local.service_name 
+}
+
+
+#new task definition to be swapped by code deploy 
+module "task-def-new" {
+  source = "./modules/task-definition"
+  
+  ecr_repo_url                   = "730335574019.dkr.ecr.eu-central-1.amazonaws.com/hello-world-app:67b6609c13b097888df97e97"
+  task_definition_name           = "new-task-def"
   aws_region                     = local.region
   ecs_task_execution_role_arn    = module.task-execution-role.task_execution_role_arn
   container_path                 = local.container_path

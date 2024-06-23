@@ -18,14 +18,6 @@ resource "aws_default_subnet" "default_subnet_c" {
   availability_zone = var.availability_zones[2]
 }
 
-resource "aws_cloudwatch_log_group" "log_group" {
-  name              = "/ecs/${var.service_name}"
-  retention_in_days = var.retention_in_days
-
-  tags = {
-    Name = var.service_name
-  }
-}
 
 resource "aws_alb" "application_load_balancer" {
   name               = var.application_load_balancer_name
@@ -54,30 +46,6 @@ resource "aws_security_group" "lb_sg_443" {
   }
 }
 
-resource "aws_lb_target_group" "service_target_group" {
-  name        = var.target_group_name
-  port        = var.container_port
-  protocol    = "HTTP"
-  vpc_id      = aws_default_vpc.default_vpc.id
-  target_type = "ip"
-
-  #TODO
-  #define health check section
-  
-  depends_on = [aws_alb.application_load_balancer]
-}
-
-resource "aws_lb_listener" "listener_443" {
-  load_balancer_arn  = aws_alb.application_load_balancer.arn
-  certificate_arn    = var.alb_certificate_arn
-  port               = "443"
-  protocol           = "HTTPS"
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.service_target_group.arn
-  }
-}
-
 resource "aws_ecs_service" "app_service" {
   name            = var.service_name
   cluster         = aws_ecs_cluster.app_cluster.id
@@ -86,7 +54,7 @@ resource "aws_ecs_service" "app_service" {
   desired_count   = var.desired_count
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.service_target_group.arn
+    target_group_arn = aws_lb_target_group.service_target_group_blue.arn
     container_name   = var.container_name
     container_port   = var.container_port
   }
@@ -100,6 +68,21 @@ resource "aws_ecs_service" "app_service" {
   ordered_placement_strategy {
     type  = "spread"
     field = "attribute:ecs.availability-zone"
+  }
+
+  #needed to become visible for code deployment group (managing blue/green deployments) 
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
+
+  # workaround for https://github.com/hashicorp/terraform/issues/12634
+  depends_on = [aws_alb.application_load_balancer]
+  # we ignore task_definition changes as the revision changes on deploy
+  # of a new version of the application
+  # desired_count is ignored as it can change due to autoscaling policy
+  lifecycle {
+    ignore_changes = [task_definition, desired_count, load_balancer]
   }
 
 }
