@@ -94,3 +94,8 @@ variable "desired_count" {
   type        = number
   
 }
+
+variable "alb_certificate_arn" {
+  description = "Certificate ARN to attach to ALB"
+  type        = string
+}

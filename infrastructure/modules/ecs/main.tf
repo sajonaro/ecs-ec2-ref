@@ -66,13 +66,13 @@ resource "aws_alb" "application_load_balancer" {
     "${aws_default_subnet.default_subnet_b.id}",
     "${aws_default_subnet.default_subnet_c.id}"
   ]
-  security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
+  security_groups = ["${aws_security_group.lb_sg_443.id}"]
 }
 
-resource "aws_security_group" "load_balancer_security_group" {
+resource "aws_security_group" "lb_sg_443" {
   ingress {
-    from_port   = var.container_port
-    to_port     = var.container_port
+    from_port   = "443"
+    to_port     = "443"
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -85,22 +85,27 @@ resource "aws_security_group" "load_balancer_security_group" {
   }
 }
 
-resource "aws_lb_target_group" "target_group" {
+resource "aws_lb_target_group" "service_target_group" {
   name        = var.target_group_name
   port        = var.container_port
   protocol    = "HTTP"
-  target_type = "ip"
   vpc_id      = aws_default_vpc.default_vpc.id
+  target_type = "ip"
+
+  #TODO
+  #define health check section
+  
+  depends_on = [aws_alb.application_load_balancer]
 }
 
-resource "aws_lb_listener" "listener" {
-  load_balancer_arn = aws_alb.application_load_balancer.arn
-  #container port is set to 8080 in task definition
-  port              = var.container_port
-  protocol          = "HTTP"
+resource "aws_lb_listener" "listener_443" {
+  load_balancer_arn  = aws_alb.application_load_balancer.arn
+  certificate_arn    = var.alb_certificate_arn
+  port               = "443"
+  protocol           = "HTTPS"
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.arn
+    target_group_arn = aws_lb_target_group.service_target_group.arn
   }
 }
 
@@ -112,7 +117,7 @@ resource "aws_ecs_service" "app_service" {
   desired_count   = var.desired_count
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.target_group.arn
+    target_group_arn = aws_lb_target_group.service_target_group.arn
     container_name   = "${var.task_name}"
     container_port   = var.container_port
   }
@@ -135,7 +140,7 @@ resource "aws_security_group" "service_security_group" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
+    security_groups = ["${aws_security_group.lb_sg_443.id}"]
   }
 
   egress {

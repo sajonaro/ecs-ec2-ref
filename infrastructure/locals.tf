@@ -11,15 +11,15 @@ locals {
   application_load_balancer_name = "hello-world-app-alb"
   target_group_name              = "hello-world-app-alb-tg"
 
-  service_name   = "hello-world-app-service"
+  service_name = "hello-world-app-service"
 
   container_port = 8080
 
   instance_type = "t3.nano"
 
-  public_ec2_key  = file("tf-key.pub")
+  public_ec2_key = file("tf-key.pub")
 
-  container_path  = "/data"
+  container_path = "/data"
 
   repository_url = "730335574019.dkr.ecr.eu-central-1.amazonaws.com/hello-world-app:894bf5c088377c873deea48a"
   region         = "eu-central-1"

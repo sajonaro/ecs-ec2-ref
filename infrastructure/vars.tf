@@ -1,18 +1,24 @@
 
 variable "S3_BUCKET_NAME" {
-  
-  type = string
+
+  type        = string
   description = "value of the S3 bucket name to mount in host ec2 instance"
 }
 
 variable "IMAGE_URL" {
-  type = string
+  type        = string
   description = "value of the image URL to run in ECS task"
-  
+
 }
 
 variable "region" {
-  type = string
+  type        = string
   description = "value of the region to deploy infrastructure to"
-  
+
+}
+
+variable "dns_name" {
+  type        = string
+  description = "value of the dns name to create in route53"
+
 }

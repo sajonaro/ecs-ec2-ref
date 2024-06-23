@@ -50,8 +50,12 @@ Implementation details:
     ```
 - Finally, access deployed application via browser using ALBs DNS name (use output value from terraform [application_url], or login into AWS console) e.g.:
 ```
-http://hello-world-app-alb-1233026957.eu-central-1.elb.amazonaws.com:8080/
+https://hello-world-app-alb-1233026957.eu-central-1.elb.amazonaws.com
 ``` 
+- Alternatively (access via dns name) e.g.:
+```
+https://dev-ops.pro   
+```
 
    
 
@@ -74,3 +78,4 @@ ssh-add path_to/your_private_key
     ```
     ssh ec2-user@ec2_private_ip
     ```
+ 
