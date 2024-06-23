@@ -1,5 +1,5 @@
 [{
-    "name" :  "${container_name}",
+    "name" :  "${name}",
     "image" : "${ecr_repo_url}",
     "essential" : true,
     "memory" : 256,

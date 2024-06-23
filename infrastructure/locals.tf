@@ -1,12 +1,12 @@
 locals {
   bucket_name = "hwa-tf-state12"
   table_name  = "hwaTFStateLocks12"
-
+  app_name    = "hw-app" 
   app_cluster_name             = "hello-world-app-cluster"
+  task_definition_name_blue    = "hello-world-app-td-blue"
+  task_definition_name_geen    = "hello-world-app-td-green"
   service_name                 = "hello-world-app-service"
   availability_zones           = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-  task_famliy                  = "hello-world-app-task-family"
-  task_name                    = "hello-world-app-task"
   ecs_task_execution_role_name = "hello-world-app-task-execution-role"
   application_load_balancer_name = "hello-world-app-alb"
   target_group_name              = "hello-world-app-alb-tg"

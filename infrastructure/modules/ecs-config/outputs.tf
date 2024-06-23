@@ -31,13 +31,13 @@ output "alb_zone_id" {
 
 output "target_group_1_name" {
   description = "value of the target group name"
-  value = aws_lb_target_group.tgs[0].name
+  value = aws_lb_target_group.tg_green.name
   
 }
 
 output "target_group_2_name" {
   description = "value of the target group name"
-  value = aws_lb_target_group.tgs[1].name
+  value = aws_lb_target_group.tg_blue.name
   
 }
 

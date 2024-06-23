@@ -18,11 +18,6 @@ variable "storage_name" {
   default = "service_storage"
 }
 
-variable "task_famliy" {
-  description = "ECS Task Family"
-  type        = string
-}
-
 variable "container_memory" {
   description = "Container Memory"
   type        = number
@@ -40,6 +35,12 @@ variable "container_cpu" {
 variable "container_port" {
   description = "Container Port"
   type        = number
+  
+}
+
+variable "container_name" {
+  description = "Container Name"
+  type        = string
   
 }
 

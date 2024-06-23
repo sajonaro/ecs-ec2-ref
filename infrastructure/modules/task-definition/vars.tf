@@ -1,7 +1,3 @@
-variable "task_name" {
-    description = "value of the task name"
-} 
-
 variable "aws_region" {
     description = "value of the aws region" 
 }
@@ -20,6 +16,12 @@ variable "container_path" {
   type = string
 }
 
+variable "container_name" {
+  description = "name of the container"
+  type = string
+  
+}
+
 variable "retention_in_days" {
   description = "CloudWatch Log Retention In Days"
   type        = number
@@ -32,7 +34,7 @@ variable "ecs_task_execution_role_arn" {
   
 }
 
-variable "ecs_service_name" {
+variable "task_definition_name" {
   description = "ECS Service Name"
   type        = string
   

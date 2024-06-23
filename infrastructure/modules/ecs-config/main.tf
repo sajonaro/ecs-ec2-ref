@@ -71,15 +71,16 @@ resource "aws_ecs_service" "app_service" {
   force_new_deployment = true
   
   load_balancer {
-    target_group_arn = aws_lb_target_group.tgs[1].arn
-    container_name   = var.service_name 
+    target_group_arn = aws_lb_target_group.tg_blue.arn
+    container_name   = var.container_name 
     # Application Port
     container_port   = var.container_port 
   }
   
-  deployment_controller {
-    type = "CODE_DEPLOY"
-  }
+  #
+  #deployment_controller {
+  #  type = "CODE_DEPLOY"
+  #}
 
   network_configuration {
     subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]

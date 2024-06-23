@@ -74,3 +74,10 @@ ssh-add path_to/your_private_key
     ```
     ssh ec2-user@ec2_private_ip
     ```
+
+## Known issues
+ - running infrastructure from non-root account
+ ```
+ sudo chown $(whoami):$(whoami) /var/run/docker.sock
+
+ ```    
