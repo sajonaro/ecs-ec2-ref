@@ -49,13 +49,7 @@ resource "aws_codedeploy_deployment_group" "blue_green_deployment_group" {
       target_group {
         name = var.target_group_1_name
       }
-
-      test_traffic_route {
-        listener_arns = [var.listener_arn]
     }
-    }
-
-
   }
 
   #bug workaround 

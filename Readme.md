@@ -79,3 +79,10 @@ ssh-add path_to/your_private_key
     ssh ec2-user@ec2_private_ip
     ```
  
+## Known Issues
+- non root user running docker in linux
+
+```
+sudo chown $(whoami):$(whoami) /var/run/docker.sock
+```
+- in order for  bd code deploy module to work make sure to provide  ACTUAL valid values for input parameters ( listener's ARN,  task definiton etc.)

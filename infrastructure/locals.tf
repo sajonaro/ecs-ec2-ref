@@ -15,7 +15,8 @@ locals {
 
   container_port = 8080
 
-  instance_type = "t3.nano"
+  #need to have enough RAM on the instance to fit 2 containers (for blue/green deployment)
+  instance_type = "t2.small"
 
   public_ec2_key = file("tf-key.pub")
 

@@ -35,5 +35,5 @@ module "glue-green-code-deploy" {
   ecs_service_name    =  local.service_name
   target_group_1_name =  "tg-green-hello-world-app-service" 
   target_group_2_name =  "tg-blue-hello-world-app-service"
-  listener_arn        =  "arn:aws:elasticloadbalancing:eu-central-1:730335574019:listener/app/hello-world-app-alb/ec1c45526365dcce/85395f3418034e54"
+  listener_arn        =  "arn:aws:elasticloadbalancing:eu-central-1:730335574019:listener/app/hello-world-app-alb/db2452c00e12c3af/46e0acd9f6b57ed2"
 }
